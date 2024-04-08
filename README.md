@@ -7,7 +7,7 @@ O [site](https://projeto-final-aa.onrender.com) está no ar através da platafor
 
 O site contém 4 páginas: [home]([https://projeto-final-aa.onrender.com/), [portfólio](https://aa-pf.onrender.co](https://aa-pf.onrender.com)m/portfolio), [currículo](https://aa-pf.onrender.com/curriculo), [dw](https://aa-pf.onrender.com)/dw). As três primeiras correspondem ao portfólio da jornalista Ana Carolina Andrade e a quarta é um raspador das manchetes da semana do portal Deutsche Welle.
 
-A segunda etapa do projeto consiste no envio do resultado da página dinâmica por e-mail uma vez por dia.
+A segunda etapa do projeto consiste no envio do resultado da página dinâmica por e-mail uma vez por dia, com integração no Pipedream para a automação.
 
 
 
