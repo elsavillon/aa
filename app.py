@@ -33,10 +33,57 @@ password = os.environ["SMTP_PASSWORD"]
 remetente = os.environ["EMAIL_REMETENTE"]
 destinatarios = os.environ["EMAIL_DESTINATARIOS"].split(',')
 
+envio_realizado = False
+
 app = Flask(__name__)
+
+def enviar_email():
+    global envio_realizado
+    if not envio_realizado:
+        manchetes_links = manchetes_dw()
+
+        html = """
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Manchetes Deutsche Welle</title>
+          </head>
+          <body>
+            <h1>Destaques Semanais</h1>
+            <p>
+              Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsche Welle e trago os destaques:
+              <ul>
+        """
+        for titulo, link in manchetes_links:
+            html += f'<li> <a href="{link}">{titulo}</a> </li>'
+        html += """
+              </ul>
+            </p>
+          </body>
+        </html>
+        """
+
+        titulo_email = "Destaques da Semana - Deutsche Welle"
+
+        server = smtplib.SMTP(smtp_server, port)
+        server.starttls()  
+        server.login(email, password)  
+
+        mensagem = MIMEMultipart()
+        mensagem["From"] = remetente
+        mensagem["To"] = ",".join(destinatarios)
+        mensagem["Subject"] = titulo_email
+        conteudo_html = MIMEText(html, "html")  # Adiciona a versão em HTML
+        mensagem.attach(conteudo_html)
+
+        server.sendmail(remetente, destinatarios, mensagem.as_string())
+        server.quit()
+
+        envio_realizado = True
 
 @app.route("/")
 def index():
+    enviar_email()
     return render_template("home.html")
     
 @app.route("/portfolio")
@@ -49,48 +96,8 @@ def curriculo():
 
 @app.route("/dw")
 def dw():
-    manchetes_links = manchetes_dw()
-
-    html = """
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Manchetes Deutsche Welle</title>
-      </head>
-      <body>
-        <h1>Destaques Semanais</h1>
-        <p>
-          Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsche Welle e trago os destaques:
-          <ul>
-    """
-    for titulo, link in manchetes_links:
-        html += f'<li> <a href="{link}">{titulo}</a> </li>'
-    html += """
-          </ul>
-        </p>
-      </body>
-    </html>
-    """
-
-    titulo_email = "Destaques da Semana - Deutsche Welle"
-
-    server = smtplib.SMTP(smtp_server, port)
-    server.starttls()  
-    server.login(email, password)  
-
-    mensagem = MIMEMultipart()
-    mensagem["From"] = remetente
-    mensagem["To"] = ",".join(destinatarios)
-    mensagem["Subject"] = titulo_email
-    conteudo_html = MIMEText(html, "html")  # Adiciona a versão em HTML
-    mensagem.attach(conteudo_html)
-
-    server.sendmail(remetente, destinatarios, mensagem.as_string())
-    server.quit()
-
-    return html  
+    enviar_email()
+    return render_template("dw.html")  
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
