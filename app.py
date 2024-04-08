@@ -5,7 +5,7 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template  
 
 def remove_acentos(texto):
     return ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn')
@@ -47,8 +47,8 @@ def portifolio():
 def curriculo():
     return render_template("curriculo.html")
 
-@app.route("/enviar-email")
-def enviar_email():
+@app.route("/dw")
+def dw():
     manchetes_links = manchetes_dw()
 
     html = """
@@ -86,11 +86,11 @@ def enviar_email():
     mensagem.attach(conteudo_html)
 
     server.sendmail(remetente, destinatarios, mensagem.as_string())
-    
-    return redirect(url_for('index'))  # Redireciona de volta para a página inicial após o envio do e-mail
+    server.quit()
+
+    return html  
 
 if __name__ == "__main__":
     app.run(debug=True)
-
 
 
