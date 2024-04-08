@@ -74,6 +74,8 @@ server.sendmail(remetente, destinatarios, mensagem.as_string())
 
 ## Páginas do site
 
+app = Flask(__name__)
+
 @app.route("/")
 def index():
     return render_template("home.html")
