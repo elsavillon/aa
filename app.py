@@ -102,4 +102,23 @@ def curriculo():
 # Definir rota para página dinâmica com raspagem do Deutsche Welle
 @app.route("/dw")
 def dw():
-    return render_template("dw.html")
+    return """
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Manchetes Deutsch Welle</title>
+  </head>
+  <body>
+    <h1>Destaques Semanais</h1>
+    <p>
+      Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsch Welle e trago os destaques:
+      <ul>
+"""
+for titulo, link in manchetes_links:
+    html += f'<li> <a href="{link}">{titulo}</a> </li>'
+html += """
+      </ul>
+    </p>
+  </body>
+</html>
+"""
