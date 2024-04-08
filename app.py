@@ -26,18 +26,18 @@ def manchetes_dw():
         lista_dw.append([titulo, link_sem_acentos])
     return lista_dw
 
-# Título do email
-titulo_email = "Destaques da Semana - Deutsch Welle"
-
+# Iniciar conexão com o servidor SMTP
 smtp_server = "smtp-relay.brevo.com"
 port = 587
-email = os.environ["EMAIL_REMENTENTE"]
+email = os.environ["EMAIL_REMETENTE"]
 password = os.environ["SMTP_PASSWORD"]
 
-# Iniciar conexão com o servidor SMTP
 server = smtplib.SMTP(smtp_server, port)
-server.starttls()  # Altera a comunicação para utilizar criptografia
-server.login(email, password)  # Autentica
+server.starttls()  
+server.login(email, password) 
+
+# Título do email
+titulo_email = "Destaques da Semana - Deutsch Welle"
 
 # Preparando o objeto da mensagem
 mensagem = MIMEMultipart()
@@ -49,13 +49,6 @@ mensagem.attach(conteudo_html)
 
 # Envio do email
 server.sendmail(remetente, destinatarios, mensagem.as_string())
-
-
-# Dados para conexão no servidor SMTP:
-smtp_server = "smtp-relay.brevo.com"
-port = 587
-email = "EMAIL_REMETENTE"
-password = "STMP_PASSWORD"
 
 # Dados para o email que será enviado:
 remetente = "EMAIL_REMETENTE"
