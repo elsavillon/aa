@@ -83,7 +83,6 @@ def enviar_email():
 
 @app.route("/")
 def index():
-    enviar_email()
     return render_template("home.html")
     
 @app.route("/portfolio")
