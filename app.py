@@ -40,7 +40,7 @@ destinatarios = os.environ["EMAIL_DESTINATARIOS"]
 # Extrair manchetes e links
 manchetes_links = manchetes_dw()
 
-# Construir o corpo do e-mail
+# Construir o corpo do email
 html = """
 <!DOCTYPE html>
 <html>
@@ -70,7 +70,7 @@ server = smtplib.SMTP(smtp_server, port)
 server.starttls()  # Altera a comunicação para utilizar criptografia
 server.login(email, password)  # Autentica
 
-# Preparando o objeto da mensagem
+# Preparar o objeto da mensagem
 mensagem = MIMEMultipart()
 mensagem["From"] = remetente
 mensagem["To"] = ",".join(destinatarios)
@@ -102,23 +102,8 @@ def curriculo():
 # Definir rota para página dinâmica com raspagem do Deutsche Welle
 @app.route("/dw")
 def dw():
-    return """
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Manchetes Deutsch Welle</title>
-  </head>
-  <body>
-    <h1>Destaques Semanais</h1>
-    <p>
-      Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsch Welle e trago os destaques:
-      <ul>
-"""
-for titulo, link in manchetes_links:
-    html += f'<li> <a href="{link}">{titulo}</a> </li>'
-html += """
-      </ul>
-    </p>
-  </body>
-</html>
-"""
+    return render_template("dw.html", manchetes_links=manchetes_links)
+
+if __name__ == "__main__":
+    app.run(debug=True)  # Executar o aplicativo Flask em modo de depuração
+
