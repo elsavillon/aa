@@ -34,7 +34,7 @@ def dw():
 def remove_acentos(texto):
     return ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn')
 
-# Função para extrair manchetes e links da Deutsche Welle
+# Função para extrair manchetes e links da DW
 def manchetes_dw():
     requisicao = requests.get('https://www.dw.com/pt-br/manchetes/headlines-pt-br')
     html = requisicao.content
@@ -68,7 +68,7 @@ html = """
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Manchetes Deutsche Welle</title>
+    <title>Manchetes Deutsch Welle</title>
   </head>
   <body>
     <h1>Destaques Semanais</h1>
@@ -76,9 +76,17 @@ html = """
       Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsch Welle e trago os destaques:
       <ul>
 """
+for titulo, link in manchetes_links:
+    html += f'<li> <a href="{link}">{titulo}</a> </li>'
+html += """
+      </ul>
+    </p>
+  </body>
+</html>
+"""
 
 # Título do email
-titulo_email = "Destaques da Semana - Deutsche Welle"
+titulo_email = "Destaques da Semana - Deutsch Welle"
 
 # Iniciar conexão com o servidor SMTP
 server = smtplib.SMTP(smtp_server, port)
@@ -95,6 +103,3 @@ mensagem.attach(conteudo_html)
 
 # Envio do email
 server.sendmail(remetente, destinatarios, mensagem.as_string())
-
-if __name__ == "__main__":
-    app.run()
