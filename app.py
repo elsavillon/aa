@@ -5,7 +5,7 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import flask
+from flask import Flask, render_template  # Importar render_template do Flask
 
 # Função para remover acentos
 def remove_acentos(texto):
