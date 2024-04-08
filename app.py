@@ -44,7 +44,7 @@ html = """
   <body>
     <h1>Destaques Semanais</h1>
     <p>
-      Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsch Welle e trago os destaques:
+      Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsche Welle e trago os destaques:
       <ul>
 """
 for titulo, link in manchetes_links:
