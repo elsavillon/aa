@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
-
-from flask import Flask, request, render_template
 import requests
-import os
 from bs4 import BeautifulSoup
+import unicodedata
+import os
 import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 # Função para remover acentos
 def remove_acentos(texto):
@@ -26,18 +26,40 @@ def manchetes_dw():
         lista_dw.append([titulo, link_sem_acentos])
     return lista_dw
 
-# Iniciar conexão com o servidor SMTP
+# Dados para conexão no servidor SMTP:
 smtp_server = "smtp-relay.brevo.com"
 port = 587
 email = os.environ["EMAIL_REMETENTE"]
 password = os.environ["SMTP_PASSWORD"]
 
-server = smtplib.SMTP(smtp_server, port)
-server.starttls()  
-server.login(email, password) 
+# Dados para o email que será enviado:
+remetente = os.environ ["EMAIL_REMETENTE"]
+destinatarios = os.environ ["EMAIL_DESTINATARIOS"]
+
+# Extrair manchetes e links
+manchetes_links = manchetes_dw()
+
+# Construir o corpo do e-mail
+html = html = """
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Manchetes Deutsch Welle</title>
+  </head>
+  <body>
+    <h1>Destaques Semanais</h1>
+    <p>
+      Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsch Welle e trago os destaques:
+      <ul>
+"""
 
 # Título do email
 titulo_email = "Destaques da Semana - Deutsch Welle"
+
+# Iniciar conexão com o servidor SMTP
+server = smtplib.SMTP(smtp_server, port)
+server.starttls()  # Altera a comunicação para utilizar criptografia
+server.login(email, password)  # Autentica
 
 # Preparando o objeto da mensagem
 mensagem = MIMEMultipart()
@@ -49,15 +71,6 @@ mensagem.attach(conteudo_html)
 
 # Envio do email
 server.sendmail(remetente, destinatarios, mensagem.as_string())
-
-# Dados para o email que será enviado:
-remetente = "EMAIL_REMETENTE"
-destinatarios = ["EMAIL_DESTINATARIOS"]
-
-# Extrair manchetes e links
-manchetes_links = manchetes_dw()
-
-app = Flask(__name__)
 
 ## Páginas do site
 
