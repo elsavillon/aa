@@ -5,7 +5,7 @@ Projeto para a disciplina de Algoritmos de Automação, ministrada pelo professo
 
 O [site](https://projeto-final-aa.onrender.com) está no ar através da plataforma Render. 
 
-O site contém 4 páginas: [home](https://projeto-final-aa.onrender.com/), [portfólio](https://trab-final-aa.onrender.com/portfolio), [currículo](https://trab-final-aa.onrender.com/curriculo), [dw](https://projeto-final-aa.onrender.com/dw). As três primeiras correspondem ao portfólio da jornalista Ana Carolina Andrade e a quarta é um raspador das manchetes da semana do portal Deutsche Welle.
+O site contém 4 páginas: [home]([https://projeto-final-aa.onrender.com/), [portfólio]([https://aatrab-final-aa.onrender.com](https://aa-pf.onrender.com/portfolio), [currículo](https://aa-pf.onrender.com/curriculo), [dw]([https://projeto-final-aa.onrender.com](https://aa-pf.onrender.com)/dw). As três primeiras correspondem ao portfólio da jornalista Ana Carolina Andrade e a quarta é um raspador das manchetes da semana do portal Deutsche Welle.
 
 A segunda etapa do projeto consiste no envio do resultado da página dinâmica por e-mail uma vez por dia.
 
