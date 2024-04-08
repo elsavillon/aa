@@ -39,7 +39,7 @@ html = """
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Manchetes Deutsch Welle</title>
+    <title>Manchetes Deutsche Welle</title>
   </head>
   <body>
     <h1>Destaques Semanais</h1>
