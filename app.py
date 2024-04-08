@@ -56,7 +56,7 @@ html += """
 </html>
 """
 
-titulo_email = "Destaques da Semana - Deutsch Welle"
+titulo_email = "Destaques da Semana - Deutsche Welle"
 
 server = smtplib.SMTP(smtp_server, port)
 server.starttls()  
