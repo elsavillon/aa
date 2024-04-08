@@ -31,7 +31,7 @@ email = os.environ["EMAIL_REMETENTE"]
 password = os.environ["SMTP_PASSWORD"]
 
 remetente = os.environ["EMAIL_REMETENTE"]
-destinatarios = os.environ["EMAIL_DESTINATARIOS"]
+destinatarios = os.environ["EMAIL_DESTINATARIOS"].split(',')
 
 manchetes_links = manchetes_dw()
 
