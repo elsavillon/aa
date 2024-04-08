@@ -10,7 +10,6 @@ from flask import Flask, render_template
 def remove_acentos(texto):
     return ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn')
 
-
 def manchetes_dw():
     requisicao = requests.get('https://www.dw.com/pt-br/manchetes/headlines-pt-br')
     html = requisicao.content
@@ -26,16 +25,13 @@ def manchetes_dw():
         lista_dw.append([titulo, link_sem_acentos])
     return lista_dw
 
-
 smtp_server = "smtp-relay.brevo.com"
 port = 587
 email = os.environ["EMAIL_REMETENTE"]
 password = os.environ["SMTP_PASSWORD"]
 
-
 remetente = os.environ["EMAIL_REMETENTE"]
 destinatarios = os.environ["EMAIL_DESTINATARIOS"]
-
 
 manchetes_links = manchetes_dw()
 
@@ -60,9 +56,7 @@ html += """
 </html>
 """
 
-
 titulo_email = "Destaques da Semana - Deutsch Welle"
-
 
 server = smtplib.SMTP(smtp_server, port)
 server.starttls()  
@@ -93,27 +87,9 @@ def curriculo():
 
 @app.route("/dw")
 def dw():
-    return
-    """
-    <html>
-  <head>
-    <title>Manchetes Deutsch Welle</title>
-  </head>
-  <body>
-    <h1>Destaques Semanais</h1>
-    <p>
-      Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsch Welle e trago os destaques:
-      <ul>
-"""
-for titulo, link in manchetes_links:
-    html += f'<li> <a href="{link}">{titulo}</a> </li>'
-html += """
-      </ul>
-    </p>
-  </body>
-</html>
-"""
+    return html  
 
 if __name__ == "__main__":
-    app.run(debug=True)  # Executar o aplicativo Flask em modo de depuração
+    app.run(debug=True)
+
 
