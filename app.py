@@ -29,6 +29,11 @@ def manchetes_dw():
 # Título do email
 titulo_email = "Destaques da Semana - Deutsch Welle"
 
+smtp_server = "smtp-relay.brevo.com"
+port = 587
+email = os.environ["EMAIL_REMENTENTE"]
+password = os.environ["SMTP_PASSWORD"]
+
 # Iniciar conexão com o servidor SMTP
 server = smtplib.SMTP(smtp_server, port)
 server.starttls()  # Altera a comunicação para utilizar criptografia
