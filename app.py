@@ -1,4 +1,3 @@
-from flask import Flask, render_template
 import requests
 from bs4 import BeautifulSoup
 import unicodedata
@@ -6,29 +5,6 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
-# Criar uma instância Flask
-app = Flask(__name__)
-
-# Definir rota para página inicial
-@app.route("/")
-def index():
-    return render_template("home.html")
-    
-# Definir rota para página de portfólio
-@app.route("/portfolio")
-def portifolio():
-    return render_template("portfolio.html")
-
-# Definir rota para página de currículo
-@app.route("/curriculo")
-def curriculo():
-    return render_template("curriculo.html")
-
-# Definir rota para página dinâmica com raspagem do Deutsche Welle
-@app.route("/dw")
-def dw():
-    return render_template("dw.html")
 
 # Função para remover acentos
 def remove_acentos(texto):
@@ -50,13 +26,13 @@ def manchetes_dw():
         lista_dw.append([titulo, link_sem_acentos])
     return lista_dw
 
-# Dados para conexão no servidor SMTP
+# Dados para conexão no servidor SMTP:
 smtp_server = "smtp-relay.brevo.com"
 port = 587
 email = os.environ["EMAIL_REMETENTE"]
 password = os.environ["SMTP_PASSWORD"]
 
-# Dados para o email que será enviado
+# Dados para o email que será enviado:
 remetente = os.environ["EMAIL_REMETENTE"]
 destinatarios = os.environ["EMAIL_DESTINATARIOS"]
 
@@ -103,3 +79,26 @@ mensagem.attach(conteudo_html)
 
 # Envio do email
 server.sendmail(remetente, destinatarios, mensagem.as_string())
+
+# Criar uma instância Flask
+app = Flask(__name__)
+
+# Definir rota para página inicial
+@app.route("/")
+def index():
+    return render_template("home.html")
+    
+# Definir rota para página de portfólio
+@app.route("/portfolio")
+def portifolio():
+    return render_template("portfolio.html")
+
+# Definir rota para página de currículo
+@app.route("/curriculo")
+def curriculo():
+    return render_template("curriculo.html")
+
+# Definir rota para página dinâmica com raspagem do Deutsche Welle
+@app.route("/dw")
+def dw():
+    return render_template("dw.html")
