@@ -1,17 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
+import unicodedata
 import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import Flask, render_template
 
-smtp_server = "smtp-relay.brevo.com"
-port = 587
-email = os.environ["EMAIL_REMETENTE"]
-password = os.environ["SMTP_PASSWORD"]
-remetente = os.environ["EMAIL_REMETENTE"]
-destinatarios = os.environ["EMAIL_DESTINATARIOS"].split(',')
+def remove_acentos(texto):
+    return ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn')
 
 def manchetes_dw():
     requisicao = requests.get('https://www.dw.com/pt-br/manchetes/headlines-pt-br')
@@ -24,8 +21,17 @@ def manchetes_dw():
         link = item.find('a').get('href')
         if link.startswith('/'):
             link = 'https://www.dw.com' + link
-        lista_dw.append([titulo, link])
+        link_sem_acentos = remove_acentos(link)
+        lista_dw.append([titulo, link_sem_acentos])
     return lista_dw
+
+smtp_server = "smtp-relay.brevo.com"
+port = 587
+email = os.environ["EMAIL_REMETENTE"]
+password = os.environ["SMTP_PASSWORD"]
+
+remetente = os.environ["EMAIL_REMETENTE"]
+destinatarios = os.environ["EMAIL_DESTINATARIOS"].split(',')
 
 app = Flask(__name__)
 
@@ -41,8 +47,8 @@ def portifolio():
 def curriculo():
     return render_template("curriculo.html")
 
-@app.route("/enviar-email-dw")
-def enviar_email_dw():
+@app.route("/dw")
+def dw():
     manchetes_links = manchetes_dw()
 
     html = """
@@ -78,11 +84,7 @@ def enviar_email_dw():
 
     server.sendmail(remetente, destinatarios, mensagem.as_string())
 
-    return "E-mail enviado com sucesso!"
-
-@app.route("/dw")
-def dw():
-    return enviar_email_dw()
+    return html
 
 if __name__ == "__main__":
     app.run(debug=True)
