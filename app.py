@@ -5,7 +5,7 @@ import os
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from flask import Flask, render_template  
+from flask import Flask, render_template
 
 def remove_acentos(texto):
     return ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn')
@@ -59,8 +59,8 @@ html += """
 titulo_email = "Destaques da Semana - Deutsche Welle"
 
 server = smtplib.SMTP(smtp_server, port)
-server.starttls()  
-server.login(email, password)  
+server.starttls()
+server.login(email, password)
 
 mensagem = MIMEMultipart()
 mensagem["From"] = remetente
@@ -76,7 +76,7 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return render_template("home.html")
-    
+
 @app.route("/portfolio")
 def portifolio():
     return render_template("portfolio.html")
@@ -87,7 +87,25 @@ def curriculo():
 
 @app.route("/dw")
 def dw():
-    return html  
+    return """
+<html>
+  <head>
+    <title>Manchetes Deutsche Welle</title>
+  </head>
+  <body>
+    <h1>Destaques Semanais</h1>
+    <p>
+      Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsche Welle e trago os destaques:
+      <ul>
+"""
+for titulo, link in manchetes_links:
+    html += f'<li> <a href="{link}">{titulo}</a> </li>'
+html += """
+      </ul>
+    </p>
+  </body>
+</html>
+"""
 
 if __name__ == "__main__":
     app.run(debug=True)
