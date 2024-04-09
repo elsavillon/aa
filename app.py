@@ -57,7 +57,7 @@ def dw():
             <title>Manchetes Deutsche Welle</title>
         </head>
         <body>
-            <h1>Destaques Semanais</h1>
+            <h1>Destaques Semanais DW </h1>
             <p>Sem tempo para ler as notícias? Sem problemas, eu fiz a ronda no Deutsche Welle e trago os destaques:</p>
             <ul>
     """
