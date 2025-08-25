@@ -11,18 +11,26 @@ def remove_acentos(texto):
     return ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn')
 
 def manchetes_dw():
-    requisicao = requests.get('https://www.dw.com/pt-br/manchetes/headlines-pt-br')
-    html = requisicao.content
-    sopa = BeautifulSoup(html, 'html.parser')
-    dw = sopa.findAll('div', {'class': 'teaser-wrap col-12 col-md-6 col-lg-4'})
+    url = 'https://www.dw.com/pt-br/manchetes/headlines-pt-br'
+    requisicao = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+    requisicao.raise_for_status()
+    sopa = BeautifulSoup(requisicao.content, 'html.parser')
+
+    # Adaptado para o layout atual
+    itens = sopa.find_all('a', class_="teaser-link")  # inspecione para confirmar
     lista_dw = []
-    for item in dw:
-        titulo = item.find('h3').text
-        link = item.find('a').get('href')
+    for item in itens:
+        titulo = item.get_text(strip=True)
+        link = item.get('href')
+
+        if not titulo or not link:
+            continue
+
         if link.startswith('/'):
             link = 'https://www.dw.com' + link
-        link_sem_acentos = remove_acentos(link)
-        lista_dw.append([titulo, link_sem_acentos])
+
+        titulo_sem_acentos = remove_acentos(titulo)
+        lista_dw.append([titulo_sem_acentos, link])
     return lista_dw
 
 smtp_server = "smtp-relay.brevo.com"
@@ -48,7 +56,7 @@ def curriculo():
     return render_template("curriculo.html")
 
 @app.route("/dw")
-def dw():
+def dw_route():
     manchetes_links = manchetes_dw()
 
     html = """
@@ -62,7 +70,7 @@ def dw():
             <ul>
     """
     for titulo, link in manchetes_links:
-        html += f'<li><a href="{link}">{titulo}</a></li>'
+        html += f'<li><a href="{link}" target="_blank">{titulo}</a></li>'
     html += """
             </ul>
         </body>
@@ -71,18 +79,21 @@ def dw():
 
     titulo_email = "Destaques da Semana - Deutsche Welle"
 
-    server = smtplib.SMTP(smtp_server, port)
-    server.starttls()
-    server.login(email, password)
+    try:
+        server = smtplib.SMTP(smtp_server, port)
+        server.starttls()
+        server.login(email, password)
 
-    mensagem = MIMEMultipart()
-    mensagem["From"] = remetente
-    mensagem["To"] = ",".join(destinatarios)
-    mensagem["Subject"] = titulo_email
-    conteudo_html = MIMEText(html, "html")
-    mensagem.attach(conteudo_html)
+        mensagem = MIMEMultipart()
+        mensagem["From"] = remetente
+        mensagem["To"] = ",".join(destinatarios)
+        mensagem["Subject"] = titulo_email
+        conteudo_html = MIMEText(html, "html")
+        mensagem.attach(conteudo_html)
 
-    server.sendmail(remetente, destinatarios, mensagem.as_string())
+        server.sendmail(remetente, destinatarios, mensagem.as_string())
+    finally:
+        server.quit()
 
     return html
 
