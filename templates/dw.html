@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Manchetes Deutsche Welle</title>
+</head>
+<body>
+    <h1>Destaques da Deutsche Welle</h1>
+
+    <p>
+        Sem tempo para acompanhar as notícias?
+        Aqui estão as principais manchetes publicadas pela DW.
+    </p>
+
+    <ul>
+        {% for titulo, link in manchetes %}
+            <li>
+                <a href="{{ link }}" target="_blank">
+                    {{ titulo }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
