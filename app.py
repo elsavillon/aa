@@ -13,7 +13,10 @@ def remove_acentos(texto):
 
 def manchetes_dw():
     url = "https://www.dw.com/pt-br/manchetes/headlines-pt-br"
-    headers = {"User-Agent": "Mozilla/5.0"}
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept-Language": "pt-BR,pt;q=0.9"
+    }
 
     r = requests.get(url, headers=headers, timeout=10)
     r.raise_for_status()
@@ -47,11 +50,16 @@ def manchetes_dw():
 
 @app.route("/")
 def home():
-    return "App DW rodando no Render ✅"
+    # healthcheck simples (Render / Pipedream)
+    return "ok"
 
 @app.route("/dw")
 def dw():
-    dados = manchetes_dw()
+    try:
+        dados = manchetes_dw()
+    except Exception as e:
+        # ERRO TRATADO → evita 500 silencioso no Pipedream
+        return f"Erro ao obter manchetes: {e}", 500
 
     html = "<h1>Manchetes DW</h1><ul>"
     for t, l in dados:
@@ -59,4 +67,3 @@ def dw():
     html += "</ul>"
 
     return html
-
