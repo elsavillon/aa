@@ -15,12 +15,12 @@ def manchetes_dw():
     url = "https://www.dw.com/pt-br/manchetes/headlines-pt-br"
     headers = {"User-Agent": "Mozilla/5.0"}
 
-    response = requests.get(url, headers=headers, timeout=10)
-    response.raise_for_status()
+    r = requests.get(url, headers=headers, timeout=10)
+    r.raise_for_status()
 
-    soup = BeautifulSoup(response.text, "html.parser")
+    soup = BeautifulSoup(r.text, "html.parser")
 
-    manchetes = []
+    resultado = []
     vistos = set()
 
     for a in soup.find_all("a", href=True):
@@ -41,36 +41,22 @@ def manchetes_dw():
             continue
 
         vistos.add(chave)
-        manchetes.append([
-            remove_acentos(titulo),
-            link
-        ])
+        resultado.append([remove_acentos(titulo), link])
 
-    return manchetes
+    return resultado
 
 @app.route("/")
 def home():
-    return "<h2>App DW rodando no Render ✅</h2>"
+    return "App DW rodando no Render ✅"
 
 @app.route("/dw")
 def dw():
     dados = manchetes_dw()
 
-    html = """
-    <html>
-      <head><title>DW</title></head>
-      <body>
-        <h1>Manchetes Deutsche Welle</h1>
-        <ul>
-    """
-
-    for titulo, link in dados:
-        html += f'<li><a href="{link}" target="_blank">{titulo}</a></li>'
-
-    html += """
-        </ul>
-      </body>
-    </html>
-    """
+    html = "<h1>Manchetes DW</h1><ul>"
+    for t, l in dados:
+        html += f'<li><a href="{l}" target="_blank">{t}</a></li>'
+    html += "</ul>"
 
     return html
+
