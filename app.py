@@ -1,11 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 import unicodedata
-import os
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from flask import Flask, render_template
+from flask import Flask
+
+app = Flask(__name__)
 
 def remove_acentos(texto):
     return ''.join(
@@ -17,14 +15,14 @@ def manchetes_dw():
     url = "https://www.dw.com/pt-br/manchetes/headlines-pt-br"
     headers = {"User-Agent": "Mozilla/5.0"}
 
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=10)
     response.raise_for_status()
 
     soup = BeautifulSoup(response.text, "html.parser")
 
-    lista_dw = []
+    manchetes = []
+    vistos = set()
 
-    # A DW usa links internos com títulos visíveis
     for a in soup.find_all("a", href=True):
         titulo = a.get_text(strip=True)
         link = a["href"]
@@ -38,10 +36,41 @@ def manchetes_dw():
         if "/pt-br/" not in link:
             continue
 
-        lista_dw.append([
+        chave = (titulo, link)
+        if chave in vistos:
+            continue
+
+        vistos.add(chave)
+        manchetes.append([
             remove_acentos(titulo),
             link
         ])
 
-    # Remove duplicatas mantendo ordem
-    vistos
+    return manchetes
+
+@app.route("/")
+def home():
+    return "<h2>App DW rodando no Render ✅</h2>"
+
+@app.route("/dw")
+def dw():
+    dados = manchetes_dw()
+
+    html = """
+    <html>
+      <head><title>DW</title></head>
+      <body>
+        <h1>Manchetes Deutsche Welle</h1>
+        <ul>
+    """
+
+    for titulo, link in dados:
+        html += f'<li><a href="{link}" target="_blank">{titulo}</a></li>'
+
+    html += """
+        </ul>
+      </body>
+    </html>
+    """
+
+    return html
